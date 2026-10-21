@@ -1,19 +1,11 @@
 ---
 name: bounty-solver
-description: >-
-  Solves an AI-agent code bounty end to end, from reading the rubric to
-  submitting a verified fix. Use when a qualified bounty needs to be
-  attempted, a submission needs status polling, or a failed verification needs
-  a retry. Covers the regression-test gate, the patch route versus the
-  pull-request route, and the fork/branch/credential pitfalls that silently
-  cost an attempt.
+description: "Solves an AI-agent code bounty end to end, from reading the rubric to submitting a verified fix. Use when a qualified bounty needs to be attempted, a submission needs status polling, or a failed verification needs a retry. Covers the regression-test gate, the patch route versus the pull-request route, and the fork/branch/credential pitfalls that silently cost an attempt."
 license: MIT
-compatibility: >-
-  Requires Python 3.8+ (standard library only) and, for the pull-request route, the GitHub CLI authenticated with repo scope.
-  No external dependencies.
+compatibility: "Requires Python 3.8+ (standard library only) and, for the pull-request route, the GitHub CLI authenticated with repo scope. No external dependencies."
 metadata:
   version: "1.0.0"
-  author: Meridian Labs
+  author: "Meridian Labs"
   platforms: [linux, macos, windows]
   tags: [bounty, github, open-source, code-fix, pull-request, income]
   related_skills: [bounty-qualifier, bounty-solver, revenue-ledger]

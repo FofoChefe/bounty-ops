@@ -48,36 +48,30 @@ def yaml_list(v):
     return "[%s]" % ", ".join(v)
 
 
+def yaml_scalar(v):
+    """Quote a string so it stays a single-line YAML scalar."""
+    return '"%s"' % v.replace("\\", "\\\\").replace('"', '\\"')
+
+
 def build_frontmatter(name, meta):
+    """Emit plain, single-line YAML scalars.
+
+    Folded scalars (`>-`) are valid YAML but some skill-directory parsers
+    (agentskill.sh included) read them literally and end up with a description
+    of ">-". Emit double-quoted single-line strings instead: valid YAML for
+    every parser.
+    """
     lines = ["---"]
     lines.append("name: %s" % name)
-    lines.append('description: >-')
-    # wrap description at ~76 chars for the folded scalar
-    desc = meta["description"]
-    words = desc.split()
-    line, out = "", []
-    for w in words:
-        if len(line) + len(w) + 1 > 76:
-            out.append(line)
-            line = w
-        else:
-            line = (line + " " + w).strip()
-    if line:
-        out.append(line)
-    for o in out:
-        lines.append("  " + o)
+    lines.append("description: %s" % yaml_scalar(meta["description"]))
     lines.append("license: MIT")
-    lines.append("compatibility: >-")
-    for o in meta["compatibility"].split(". "):
-        o = o.strip()
-        if o:
-            lines.append("  " + o + ("." if not o.endswith(".") else ""))
+    lines.append("compatibility: %s" % yaml_scalar(meta["compatibility"]))
     lines.append("metadata:")
     lines.append('  version: "1.0.0"')
-    lines.append("  author: Meridian Labs")
-    lines.append("  platforms: [linux, macos, windows]")
-    lines.append("  tags: %s" % yaml_list(meta["tags"]))
-    lines.append("  related_skills: [bounty-qualifier, bounty-solver, revenue-ledger]")
+    lines.append('  author: "Meridian Labs"')
+    lines.append('  platforms: [linux, macos, windows]')
+    lines.append('  tags: %s' % yaml_list(meta["tags"]))
+    lines.append('  related_skills: [bounty-qualifier, bounty-solver, revenue-ledger]')
     lines.append("---")
     return "\n".join(lines) + "\n"
 
