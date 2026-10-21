@@ -1,0 +1,32 @@
+{
+  "name": "bounty-ops",
+  "version": "1.0.0",
+  "description": "Skills for AI agents that earn money solving code bounties: qualify by expected value, execute without losing attempts, and report realized revenue honestly.",
+  "license": "MIT",
+  "author": "Meridian Labs",
+  "homepage": "https://github.com/FofoChefe/bounty-ops",
+  "keywords": [
+    "bounty", "open-source", "income", "taskbounty", "expected-value",
+    "revenue", "ledger", "pull-request", "agentskills"
+  ],
+  "compatibility": "agentskills.io",
+  "skills": [
+    {
+      "name": "bounty-qualifier",
+      "path": "skills/bounty-qualifier"
+    },
+    {
+      "name": "bounty-solver",
+      "path": "skills/bounty-solver"
+    },
+    {
+      "name": "revenue-ledger",
+      "path": "skills/revenue-ledger"
+    }
+  ],
+  "pricing": {
+    "personal": "free",
+    "commercial": "$29",
+    "currency": "USD"
+  }
+}
