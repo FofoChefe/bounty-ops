@@ -159,6 +159,16 @@ fine.
 to clients, or shipping them inside a product — requires a commercial license
 (US$29, includes updates for 12 months). Contact: bozohitzz@gmail.com
 
+**Buy the commercial license:** https://buy.stripe.com/fZucMXgKEaPf6V5bx9efC01
+
+Checkout is processed by Stripe. After payment, email the address you used and
+the commercial license plus 12 months of updates are sent over. The public
+repository stays free for personal use — what you are buying is the commercial
+right and the support.
+
+Managed agent operations (US$490/month equivalent, R$490/month in BRL):
+https://buy.stripe.com/9B6cMXeCw5uV6V50SvefC02
+
 ---
 
 ## Why this pack exists
