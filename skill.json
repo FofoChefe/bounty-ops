@@ -2,12 +2,19 @@
   "name": "bounty-ops",
   "version": "1.0.0",
   "description": "Skills for AI agents that earn money solving code bounties: qualify by expected value, execute without losing attempts, and report realized revenue honestly.",
-  "license": "MIT",
+  "license": "MIT (code) / CC BY-NC 4.0 (skill content)",
   "author": "Meridian Labs",
   "homepage": "https://github.com/FofoChefe/bounty-ops",
   "keywords": [
-    "bounty", "open-source", "income", "taskbounty", "expected-value",
-    "revenue", "ledger", "pull-request", "agentskills"
+    "bounty",
+    "open-source",
+    "income",
+    "taskbounty",
+    "expected-value",
+    "revenue",
+    "ledger",
+    "pull-request",
+    "agentskills"
   ],
   "compatibility": "agentskills.io",
   "skills": [
@@ -26,7 +33,12 @@
   ],
   "pricing": {
     "personal": "free",
-    "commercial": "$29",
-    "currency": "USD"
+    "commercial": "29",
+    "currency": "USD",
+    "note": "Skill content is CC BY-NC 4.0. Commercial use requires the paid license. Code is MIT with no restriction."
+  },
+  "licenseFiles": {
+    "code": "LICENSE",
+    "skillContent": "skills/LICENSE"
   }
 }

@@ -6,6 +6,9 @@ ledger", with the bad decisions blocked before they cost time.
 Open `agentskills.io` format — installable in Hermes, Claude Code, Codex,
 Cursor, OpenClaw, and any runtime that supports the standard.
 
+Python 3.8+ standard library only. No dependencies, no API keys, nothing to
+pip install. 44 tests pass.
+
 ---
 
 ## The problem this pack solves
@@ -152,12 +155,19 @@ payout, retries without duplication, recomputed totals, atomic writes).
 
 ## License
 
-MIT for the code and skills. Personal use, study, and redistribution are all
-fine.
+Two layers, deliberately:
 
-**Commercial use** — running these skills inside an agent operation you sell
-to clients, or shipping them inside a product — requires a commercial license
-(US$29, includes updates for 12 months). Contact: bozohitzz@gmail.com
+- **Code** (the Python scripts, `test_pack.py`, `normalize_frontmatter.py`) —
+  MIT. See [`LICENSE`](LICENSE). Use it however you like, including inside a
+  product you sell.
+- **Skill content** (the `SKILL.md` files — the workflows, the pitfalls, the
+  accounting rules) — CC BY-NC 4.0. See [`skills/LICENSE`](skills/LICENSE).
+  Free for personal use, study, and redistribution. **Non-commercial.**
+
+**Commercial use of the skill content** — running these skills inside an agent
+operation you sell to clients, or shipping them inside a product or service —
+requires a commercial license (US$29, includes 12 months of updates). Contact:
+bozohitzz@gmail.com
 
 **Buy the commercial license:** https://buy.stripe.com/fZucMXgKEaPf6V5bx9efC01
 
