@@ -160,7 +160,15 @@ MIT. Os scripts podem ser usados livremente.
 clientes, produto embutido) — inclui direito de redistribuir dentro da sua
 operação e atualizações por 12 meses.
 
-Compre com Stripe (link enviado após o pagamento) ou crypto via USDC.
+**Compre agora:** https://buy.stripe.com/fZucMXgKEaPf6V5bx9efC01
+
+Checkout Stripe (US$29, compra única, cartão ou Pix). Após o pagamento, envie
+o e-mail usado na compra e eu envio o acesso ao pack + atualizações por
+12 meses. Repositorio publico, entao a versao gratuita continua disponivel
+para uso pessoal — o que voce compra e a licenca comercial e o suporte.
+
+Servico de operacao de agentes (R$ 490/mes):
+https://buy.stripe.com/9B6cMXeCw5uV6V50SvefC02
 
 ---
 
