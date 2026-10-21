@@ -1,14 +1,22 @@
 ---
 name: bounty-qualifier
-description: "Use when filtering open AI-agent bounties for worth."
-version: 1.0.0
-author: Meridian Labs
+description: >-
+  Qualifies open AI-agent code bounties by expected value before any effort is
+  spent. Use when a bounty feed returns options and you need to pick one,
+  compare boards on a single value scale, or decide whether a board is worth
+  continuing. Computes EV = (net_reward x win_probability) - effort_cost,
+  discards repos with no test suite because they cannot be paid out, and shows
+  the arithmetic behind every skip.
 license: MIT
-platforms: [linux, macos, windows]
+compatibility: >-
+  Requires Python 3.8+ (standard library only).
+  No network access and no external dependencies.
 metadata:
-  hermes:
-    tags: [bounty, triage, expected-value, taskbounty, automation]
-    related_skills: [bounty-solver, revenue-ledger]
+  version: "1.0.0"
+  author: Meridian Labs
+  platforms: [linux, macos, windows]
+  tags: [bounty, triage, expected-value, taskbounty, automation, open-source]
+  related_skills: [bounty-qualifier, bounty-solver, revenue-ledger]
 ---
 
 # Bounty qualifier

@@ -1,179 +1,168 @@
-# Bounty Ops — skill pack para agentes que ganham dinheiro com bounty
+# Bounty Ops — a skill pack for AI agents that earn money on code bounties
 
-Três skills que transformam "achei um bounty na internet" em "dinheiro
-verificado no ledger", com as decisões ruins bloqueadas antes de custarem
-tempo.
+Three skills that turn "I found a bounty online" into "money verified in the
+ledger", with the bad decisions blocked before they cost time.
 
-Formato aberto `agentskills.io` — instalável em Hermes, Claude Code, Codex,
-Cursor, OpenClaw e qualquer runtime compatível.
-
----
-
-## O problema que este pack resolve
-
-Agentes de bounty falham de formas previsíveis, e quase sempre por erro de
-processo, não por falta de capability:
-
-1. **Trabalham bounty sem Expected Value.** Uma bounty de US$42 disputada por
-   4 solvers rende US$8 — menos que uma hora de qualquer outra coisa. O
-   agente só descobre isso depois de gastar duas horas.
-2. **Descobrem o "no test suite means no payout" tarde demais.** A plataforma
-   exige um teste de regressão novo. Repo sem suíte de testes = payout
-   impossível, não importa quão bom é o fix.
-3. **Perdem tentativas em erro de plumbing.** Branch que colide com
-   diretório, push que pendura em prompt invisível, `gh pr create` que abre PR
-   do branch errado. Cada um custa a tentativa inteira.
-4. **Reportam valor postado como se fosse receita.** Bounty submetida não
-   pagou nada. Confundir os dois números é como pipeline de agente vira
-   ficção — e é exatamente o que impede o dono de decidir se vale continuar
-   investindo.
-
-Este pack attacka os quatro, em ordem: qualifica antes de agir, executa sem
-erro de plumbing, e reporta a verdade.
+Open `agentskills.io` format — installable in Hermes, Claude Code, Codex,
+Cursor, OpenClaw, and any runtime that supports the standard.
 
 ---
 
-## As skills
+## The problem this pack solves
 
-### `bounty-qualifier` — decide o que vale a pena
+Bounty agents fail in predictable ways, and almost always through process
+error rather than missing capability:
 
-Transforma uma feed de bounties numa shortlist com a aritmética à mostra.
+1. **They work bounties without computing expected value.** A US$42 bounty
+   contested by four solvers yields US$8 — less than an hour of anything
+   else. The agent only discovers this after spending two hours.
+2. **They learn "no test suite means no payout" too late.** Platforms require a
+   new regression test. A repo with no test suite is unpayable, no matter how
+   good the fix.
+3. **They lose attempts to plumbing.** A branch name that collides with a
+   directory, a push that hangs on an invisible credential prompt, a
+   `gh pr create` that opens the wrong branch. Each one costs the whole
+   attempt.
+4. **They report posted value as if it were revenue.** A submitted bounty has
+   paid nothing. Conflating the two is how agent pipelines turn into fiction —
+   and it is exactly what stops the owner from deciding whether to fund it
+   further.
+
+This pack attacks all four, in order: qualify before acting, execute without
+losing an attempt, and report the truth.
+
+---
+
+## The skills
+
+### `bounty-qualifier` — decides what is worth doing
+
+Turns a feed of bounties into a ranked shortlist with the arithmetic visible.
 
 ```
-EV = (net_reward × win_probability) − effort_cost
-win_probability ≈ 1 / (1 + competitors)
+EV = (net_reward x win_probability) - effort_cost
+win_probability ~= 1 / (1 + competitors)
 ```
 
-Filtros configuráveis: reward mínimo, EV mínimo, teto de esforço, piso de
-valor/hora, e o filtro que mais importa — **repositório sem suíte de testes é
-descartado**, porque não dá para provar o fix.
+Configurable floors: minimum reward, minimum EV, effort ceiling, hourly-value
+floor, and the filter that matters most — **a repository with no test suite is
+discarded**, because there is no way to prove the fix.
 
-O que ele ensina e o script não pode esconder:
-- **Bounty contestada é corrida, não fila.** "First passing submission wins"
-  significa que ser segundo vale zero. Velocidade vence qualidade no payout;
-  qualidade protege o win rate. São coisas diferentes.
-- **Normalmente você tem uma tentativa.** Retry só depois de *verdict de
-  verificação falho*, e só uma vez. Sua primeira tentativa descuidada queima o
-  retry.
-- **Registro ≠ elegibilidade.** Endereço de payout salvo não é transferência.
-  Um board honesto ainda pode ser um péssimo investimento se a rota de saque
-  não está confirmada.
-- **Largura vs profundidade.** Breadth (muitos bounties baratos) escala linear
-  e só funciona se submissão for barata. Depth (poucos, caros) tem EV alto
-  mas depende de ganhar contests. A maioria deve começar em breadth para
-  construir win rate.
+What it teaches that no script can:
 
-### `bounty-solver` — executa sem perder tentativa
+- **A contested bounty is a race, not a queue.** "First passing submission
+  wins" means second place is worth zero. Speed beats quality on the payout;
+  quality protects the win rate. Those are different things.
+- **You usually get one attempt.** A retry is typically allowed only after a
+  *failed verification verdict*, and only once. A sloppy first attempt burns
+  the retry.
+- **Registration is not eligibility.** A saved payout address is not a
+  transfer. A board can be entirely honest and still be a bad investment if
+  the payout route is unconfirmed.
+- **Breadth versus depth.** Breadth (many cheap bounties) scales linearly and
+  only works if submissions are free. Depth (few, expensive ones) has higher
+  EV but depends on winning contests. Most agents should start with breadth to
+  build a win rate, then shift to depth. Grinding hard contests from a cold
+  profile is the most common way to end up with a portfolio of failures and no
+  reputation.
 
-O workflow completo, do detalhe do bounty ao claim, com as armadilhas que só
-aparecem na prática:
+### `bounty-solver` — executes without losing an attempt
 
-- A rota de **patch** (`POST /submissions/patch`) é preferível à de PR —
-  elimina toda a superfície de falha de fork/branch/push.
-- Se a plataforma exige PR: branch que colide com diretório é **rejeitado no
-  push** ("directory file conflict"). `gh pr create` contra repo upstream
-  precisa de `--repo` e `--head` explícitos. `gh repo create` não faz push.
-  `git push` pendura em prompt invisível se o credential helper não estiver
-  ligado ao CLI.
-- **O teste de regressão é obrigatório e tem que falhar antes do fix.**
-- **A suíte existente tem que continuar passando.** PR que quebra CI vale zero.
-- Read the rubric antes: se não é satisfazível por mudança de código, pule.
-- Nunca submeter duas vezes com descuido — a retry é seu único seguro.
+The full workflow, from reading the bounty to submitting the claim, with the
+pitfalls that only show up in practice:
 
-### `revenue-ledger` — reportar a verdade
+- The **patch route** (`POST /submissions/patch`) is preferable to the PR
+  route — it removes the entire fork/branch/push failure surface.
+- When the platform expects a pull request: a branch that collides with a
+  directory in the repo is **rejected at push time** ("directory file
+  conflict"). `gh pr create` against an upstream repo needs explicit `--repo`
+  and `--head`. `gh repo create` does not push. `git push` hangs silently on a
+  credential prompt if the helper is not wired to your CLI.
+- **The regression test is mandatory and must fail before the fix.**
+- **The existing suite must keep passing.** A PR that breaks CI is worth zero.
+- Read the rubric before you start. If it is not satisfiable by a code change,
+  skip it.
+- Never submit twice carelessly — the retry is your only safety net.
 
-Quatro números, e só um é receita:
+### `revenue-ledger` — report the truth
 
-| Número | O que é | É receita? |
+Four numbers, and only one of them is revenue:
+
+| Number | What it is | Revenue? |
 |---|---|---|
-| Posted value | soma de tudo que você tentou | Não |
-| Expected value | estimativa ponderada | Não |
-| Pending | submetido, não verificado | Não |
-| **Realized** | **concedido e pago** | **Sim** |
+| Posted value | Sum of every bounty amount attempted | No |
+| Expected value | Probability-weighted estimate | No |
+| Pending | Submitted, not verified or awarded | No |
+| **Realized** | **Awarded and paid out** | **Yes** |
 
-Regras contábeis: só `awarded` conta; a taxa da plataforma é descontada; uma
-entrada por bounty (retry atualiza, não duplica); perdas nunca são deletadas;
-o total é sempre derivado das entradas, nunca digitado.
+Accounting rules: only `awarded` counts; the platform's cut is deducted; one
+entry per bounty (a retry updates the entry, it does not duplicate it); losses
+are never deleted; the total is always derived from the entries, never typed.
 
-O relatório sai com win rate sobre **decididas** (não sobre tentativas —
-tentativa em voo não é derrota), receita por tentativa e por vitória.
+The report gives attempts, posted value, in-flight count, awards, rejections,
+win rate over **decided** attempts, realized revenue, and revenue per attempt.
 
 ---
 
-## Instalação
+## Installation
 
-**Hermes (ou qualquer runtime compatível com agentskills.io):**
+**Hermes (or any agentskills.io-compatible runtime):**
 
 ```bash
-# a partir do repositório
-hermes skills tap add <owner>/bounty-ops
-hermes skills install bounty-ops/bounty-qualifier
-hermes skills install bounty-ops/bounty-solver
-hermes skills install bounty-ops/revenue-ledger
+hermes skills tap add FofoChefe/bounty-ops
+hermes skills install FofoChefe/bounty-ops/bounty-qualifier
+hermes skills install FofoChefe/bounty-ops/bounty-solver
+hermes skills install FofoChefe/bounty-ops/revenue-ledger
 ```
 
 **Claude Code / Codex / Cursor / Aider:**
 
 ```bash
-npx skills add <owner>/bounty-ops
+npx skills add FofoChefe/bounty-ops
 ```
 
-**Sem instalação, do zero:** copie `skills/<nome>/` para o diretório de
-skills do seu runtime. Cada skill é um `SKILL.md` + scripts, sem dependências
-externas — só Python 3 stdlib.
+**No install, straight from source:** copy `skills/<name>/` into your runtime's
+skills directory. Each skill is a `SKILL.md` plus scripts, with no external
+dependencies — Python 3 standard library only.
 
 ---
 
-## Requisitos
+## Requirements
 
-- Python 3.8+ (stdlib apenas — nada para instalar)
-- Para o `bounty-solver`: `gh` autenticado, e um cliente GitHub com escopo
-  `repo`. A conta que abre o PR tem que ser a mesma logada na plataforma de
-  bounty, senão o payout não sai.
-- Nenhuma skill submete trabalho, gasta dinheiro ou toca conta sem
-  aprovação explícita.
+- Python 3.8+ (standard library only — nothing to install)
+- For `bounty-solver`: `gh` authenticated, and a GitHub client with `repo`
+  scope. The account that opens the pull request must be the same account
+  signed in to the bounty platform, or the payout will not be released.
+- No skill submits work, spends money, or touches an account without explicit
+  approval.
 
 ---
 
-## Testes
+## Tests
 
 ```bash
 python test_pack.py
 ```
 
-44 testes cobrindo: normalização de feeds com nomes de campo diferentes, a
-aritmética de EV, cada gate de desqualificação, e a contabilidade do ledger
-(payout de 80%, retry sem duplicar, total recalculado, escrita atômica).
+44 tests covering: normalization of feeds with differing field names, the EV
+arithmetic, every disqualification gate, and the ledger's accounting (80%
+payout, retries without duplication, recomputed totals, atomic writes).
 
 ---
 
-## Licença
+## License
 
-MIT. Os scripts podem ser usados livremente.
+MIT for the code and skills. Personal use, study, and redistribution are all
+fine.
 
----
-
-## Preço
-
-**Grátis** para uso pessoal e para instalar nas suas próprias máquinas.
-**US$29** para uso comercial (consultoria, operação de agentes para
-clientes, produto embutido) — inclui direito de redistribuir dentro da sua
-operação e atualizações por 12 meses.
-
-**Compre agora:** https://buy.stripe.com/fZucMXgKEaPf6V5bx9efC01
-
-Checkout Stripe (US$29, compra única, cartão ou Pix). Após o pagamento, envie
-o e-mail usado na compra e eu envio o acesso ao pack + atualizações por
-12 meses. Repositorio publico, entao a versao gratuita continua disponivel
-para uso pessoal — o que voce compra e a licenca comercial e o suporte.
-
-Servico de operacao de agentes (R$ 490/mes):
-https://buy.stripe.com/9B6cMXeCw5uV6V50SvefC02
+**Commercial use** — running these skills inside an agent operation you sell
+to clients, or shipping them inside a product — requires a commercial license
+(US$29, includes updates for 12 months). Contact: bozohitzz@gmail.com
 
 ---
 
-## Por que este pack existe
+## Why this pack exists
 
-Toda a orientação aqui veio de rodar o pipeline de verdade numa máquina real:
-fork → branch → commit → push → PR → close, com três bugs que só apareceram
-no caminho. As armadilhas estão documentadas porque alguém já pagau por elas.
+Every instruction here came from running the pipeline on a real machine: fork
+→ branch → commit → push → PR → close, with three bugs that only appeared on
+the way. The pitfalls are documented because someone has already paid for them.

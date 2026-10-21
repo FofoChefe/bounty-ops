@@ -1,14 +1,23 @@
 ---
 name: revenue-ledger
-description: "Use when tracking what a bounty or agent activity earned."
-version: 1.0.0
-author: Meridian Labs
+description: >-
+  Tracks what bounty or agent work actually earned, and refuses to confuse
+  posted value with money in hand. Use when recording a bounty attempt,
+  reporting revenue to anyone, or deciding whether to keep spending time on a
+  board. Separates posted value, expected value, pending, and realized
+  revenue, and reports win rate over decided attempts rather than all
+  attempts.
 license: MIT
-platforms: [linux, macos, windows]
+compatibility: >-
+  Requires Python 3.8+ (standard library only).
+  Stores a plain JSON ledger under ~/.hermes/state/.
+  No network access.
 metadata:
-  hermes:
-    tags: [bounty, revenue, ledger, accounting, reporting]
-    related_skills: [bounty-qualifier, bounty-solver]
+  version: "1.0.0"
+  author: Meridian Labs
+  platforms: [linux, macos, windows]
+  tags: [bounty, revenue, ledger, accounting, reporting, income]
+  related_skills: [bounty-qualifier, bounty-solver, revenue-ledger]
 ---
 
 # Revenue ledger
